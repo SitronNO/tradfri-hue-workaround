@@ -68,17 +68,16 @@ if __name__ == '__main__':
 
     # Set logging level based on -v's:
     verbose_level = 40 - (10*args.verbose) if args.verbose > 0 else 0
-    print(f'Verbose level: {verbose_level}')
     logging.basicConfig(level=verbose_level, format='%(asctime)s %(levelname)s %(module)s: %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
 
     logging.info(f'Arguments: {args}')
 
     b = Bridge(args.bridge_ip)
-    logging.debug(f'Trying to connect to the bridge...')
+    logging.info(f'Trying to connect to the bridge...')
     b.connect()
-    logging.debug(f'Connected to the bridge')
-    logging.debug(f'Getting the API...')
+    logging.info(f'Connected to the bridge')
+    logging.info(f'Getting the API...')
     b.get_api()
 
     if args.list:
