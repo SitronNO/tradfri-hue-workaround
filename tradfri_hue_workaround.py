@@ -77,9 +77,10 @@ if __name__ == '__main__':
     logging.info(f'Trying to connect to the bridge...')
     b.connect()
     logging.info(f'Connected to the bridge')
-    logging.info(f'Getting the API...')
+    logging.info(f'Fetching the API resource...')
     b.get_api()
-
+    logging.info(f'API resource acquired')
+    
     if args.list:
         list_lights(b)
     elif len(args.light_ids) > 0:
