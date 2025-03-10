@@ -35,6 +35,12 @@ You can also list available lights and ID's:
 
     ./tradfri_hue_workaround.py <bridge_ip> -l
 
+If you want a bit more verbose output, or even debug messages, you can add the following argument:
+
+    ./tradfri_hue_workaround.py -v <other_args>    # Info messages
+    ./tradfri_hue_workaround.py -vv <other_args>   # Debug messages
+
+
 ## Authentication against Philips Hue Bridge
 
 The first time you run the script you need to press the button on the Philips Hue Bridge.
