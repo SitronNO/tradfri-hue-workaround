@@ -2,7 +2,8 @@
 
 import argparse
 import logging
-from phue import Bridge
+import socket
+from phue import Bridge, PhueRequestTimeout
 from time import sleep, time
 
 # Default values
@@ -31,18 +32,38 @@ class TradfriLight():
 
         self._last_brightness = brightness
 
+
 def main(bridge, args):
     tradfri_ids = args.light_ids
     light_list = bridge.get_light_objects()
     tradfri_lights = [TradfriLight(l, brightness_delay=args.brightness_delay) for l in light_list if l.light_id in tradfri_ids]
 
+    retries = 0
     while True:
-        for light in tradfri_lights:
-            logging.debug(f'Checking light {light._light.name}')
-            light.check_and_update()
-        
-        logging.debug(f'Sleeping for {args.poll_time} seconds...')
-        sleep(args.poll_time)
+        try:
+            for light in tradfri_lights:
+                logging.debug(f'Checking light {light._light.name}')
+                light.check_and_update()
+            
+            # Reset retries count after a successful run
+            if retries > 0:
+                logging.info("Connection re-established.")
+                retries = 0
+
+            logging.debug(f'Sleeping for {args.poll_time} seconds...')
+            sleep(args.poll_time)
+
+        except (socket.timeout, OSError, PhueRequestTimeout) as e:
+            retries += 1
+            logging.warning(f"Network error ({type(e).__name__}). Retrying in {args.retry_delay}s... (Attempt {retries}/{args.max_retries})")
+            if retries >= args.max_retries:
+                logging.error("Maximum number of retries reached. Terminating.")
+                break
+            sleep(args.retry_delay)
+        except Exception as e:
+            logging.error(f"An unexpected error occurred: {e}")
+            break
+
 
 def list_lights(b: Bridge):
     logging.debug(f'Getting list of lights...')
@@ -64,6 +85,8 @@ if __name__ == '__main__':
     parser.add_argument('-d', '--brightness_delay',type = float, help=f'How long to wait after brightness is attempted changed before actually updating the brightness. Value in seconds ({delay_default})', default=delay_default)
     parser.add_argument('-l', '--list', action='store_true', required=False, default=False,help=f'List available lights')
     parser.add_argument('-v', '--verbose', action='count', help=f'Be more verbose. -vv will print debug messages', default=1)
+    parser.add_argument('--max-retries', type=int, default=5, help='Maximum number of connection retries before exiting.')
+    parser.add_argument('--retry-delay', type=int, default=5, help='Delay in seconds between retries.')
     args = parser.parse_args()
 
     # Set logging level based on -v's:
@@ -77,8 +100,9 @@ if __name__ == '__main__':
     logging.info(f'Trying to connect to the bridge...')
     b.connect()
     logging.info(f'Connected to the bridge')
-    logging.info(f'Getting the API...')
+    logging.info(f'Fetching the API resource...')
     b.get_api()
+    logging.info(f'API resource acquired')
 
     if args.list:
         list_lights(b)
