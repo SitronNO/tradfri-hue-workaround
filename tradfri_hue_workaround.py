@@ -77,7 +77,7 @@ def list_lights(b: Bridge):
         print(f'<no lights found>')
 
 if __name__ == '__main__':
-    #¤logging.basicConfig(level=logging.WARNING)
+    #logging.basicConfig(level=logging.WARNING)
     parser = argparse.ArgumentParser(description='Workaround script for IKEA Trådfri brightness issue on Philips Hue Bridge. Simply run the script with bridge IP and Trådfrid light ID\'s as argument. Remember to push the bridge button before starting the script the first time')
     parser.add_argument('bridge_ip')
     parser.add_argument('light_ids', nargs='*', type=float)
@@ -103,7 +103,7 @@ if __name__ == '__main__':
     logging.info(f'Fetching the API resource...')
     b.get_api()
     logging.info(f'API resource acquired')
-
+    
     if args.list:
         list_lights(b)
     elif len(args.light_ids) > 0:
