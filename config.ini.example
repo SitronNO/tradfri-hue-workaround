@@ -11,3 +11,4 @@ poll_time = 0.5
 brightness_delay = 1.5
 verbose = 2
 max_retries = 10
+retry_delay = 5
