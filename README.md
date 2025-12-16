@@ -77,7 +77,6 @@ configuration file (INI format).
 3. Run the script:
     ```
     ./tradfri_hue_workaround.py -c config.ini
-
     ```
 
 You can also set the CONFIGFILE environment variable to point to your config
