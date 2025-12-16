@@ -49,11 +49,11 @@ file.
 You can run the script using command-line arguments, a configuration file, or a
 combination of both.
 
-### Order of Precedence The script determines values in the following order
-(highest priority first):
-1. **Command Line Arguments** (e.g., `-t 0.5`)
-2. **Configuration File** (specified via `-c` or `CONFIGFILE` env var)
-3. **Default Values**
+### Order of Precedence
+The script determines values in the following order:
+1. Command Line Arguments (e.g., `-t 0.5`)
+2. Configuration File (specified via `-c` or `CONFIGFILE` env var)
+3. Default Values
 
 ### 1. Command Line Simply start the script with Hue Bridge IP and Trådfri light
 ID's as arguments:
@@ -69,7 +69,7 @@ configuration file (INI format).
 
 1. Copy the example config:
 
-    cp config.ini.example config.ini
+    `cp config.ini.example config.ini`
 
 2. Edit `config.ini` with your Bridge IP, API Key (Username), and Light IDs.
 
