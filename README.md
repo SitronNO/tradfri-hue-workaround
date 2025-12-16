@@ -68,15 +68,17 @@ List available lights and IDs:
 configuration file (INI format).
 
 1. Copy the example config:
-
-    `cp config.ini.example config.ini`
+    ```
+    cp config.ini.example config.ini`
+    ```
 
 2. Edit `config.ini` with your Bridge IP, API Key (Username), and Light IDs.
 
 3. Run the script:
-
+    ```
     ./tradfri_hue_workaround.py -c config.ini
 
+    ```
 
 You can also set the CONFIGFILE environment variable to point to your config
 file, allowing you to run the script without any arguments:
