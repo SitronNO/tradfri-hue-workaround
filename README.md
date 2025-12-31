@@ -4,16 +4,42 @@ Philips Hue Bridge. It works by continuously polling the Hue Bridge to detect
 change in brightness, then resend the brightness command to the Trådfri light
 after a short period.
 
-## Why this project? There's a compatibility issue with IKEA Trådfri lights and
-Philips Hue Bridge where the brightness is not set correctly when changing
-scenes. The Hue Bridge will first send a command for color change, then
-brightness. The Trådfri light will not accept any commands while it is busy
-changing the color and discards the command to change its brightness. This
-results in a mismatch where the Hue Bridge thinks the brightness has changed,
-while it has actually not changed. 
+## Why this project?
+There's a compatibility issue with IKEA Trådfri lights and Philips Hue Bridge
+where the brightness is not set correctly when changing scenes. The Hue Bridge
+will first send a command for color change, then brightness. The Trådfri light
+will not accept any commands while it is busy changing the color and discards
+the command to change its brightness. This results in a mismatch where the Hue
+Bridge thinks the brightness has changed, while it has actually not changed. 
 
-## Requirements You'll need a PC or server where the script can run in the
-background. 
+## Docker
+
+If you want to run this project as a Docker container, a `Dockerfile` is provied
+so you are able to build and run the container:
+
+1. `cp config.ini.example docker.ini`
+2. Edit `docker.ini` to fit your system. You might need to run some commands
+   (below) beforehand to get list of lights and API-KEY.
+3. Build the image:
+
+    # Old school:
+    docker build -t tradfri-hue-workaround:<tag> .
+
+    # New method using buildx:
+    docker buildx build -t tradfri-hue-workaround:<tag> .
+
+4. Run the container:
+
+    # Foreground:
+    docker run --rm --name tradfri-hue-workaround tradfri-hue-workaround:<tag>
+
+    # Background:
+    docker run --rm --name tradfri-hue-workaround tradfri-hue-workaround:<tag> -d
+    docker logs -f tradfri-hue-workaround
+
+
+## Requirements
+You'll need a PC or server where the script can run in the background. 
 
 It's recommended to use a Python3 virtual environment to install the required
 module for this script:
@@ -35,9 +61,10 @@ username (API Key).
 By default, the `phue` library saves this key in a file located at
 `$HOME/.python_hue`.
 
-### Using the Key in Config Files If you wish to use the configuration file (see
-below) to define your connection settings, you should first run the script once
-to generate the key. Then, you can retrieve it by reading the file:
+### Using the Key in Config Files
+If you wish to use the configuration file (see below) to define your connection
+settings, you should first run the script once to generate the key. Then, you
+can retrieve it by reading the file:
 
     cat ~/.python_hue
 
@@ -55,8 +82,8 @@ The script determines values in the following order:
 2. Configuration File (specified via `-c` or `CONFIGFILE` env var)
 3. Default Values
 
-### 1. Command Line Simply start the script with Hue Bridge IP and Trådfri light
-ID's as arguments:
+### 1. Command Line
+Simply start the script with Hue Bridge IP and Trådfri light ID's as arguments:
 
     ./tradfri_hue_workaround.py <bridge_ip> <light_id_1> <light_id_2> ...
 
@@ -64,8 +91,9 @@ List available lights and IDs:
 
     ./tradfri_hue_workaround.py <bridge_ip> -l
 
-### 2. Configuration File You can avoid typing arguments every time by using a
-configuration file (INI format).
+### 2. Configuration File
+You can avoid typing arguments every time by using a configuration file (INI
+format).
 
 1. Copy the example config:
     ```
@@ -85,9 +113,10 @@ file, allowing you to run the script without any arguments:
     export CONFIGFILE=./config.ini ./tradfri_hue_workaround.py
 
 
-### 3. Mixed usage You can override configuration file settings with
-command-line arguments. For example, to use your saved config but temporarily
-increase verbosity and change the poll time:
+### 3. Mixed usage
+You can override configuration file settings with command-line arguments. For
+example, to use your saved config but temporarily increase verbosity and change
+the poll time:
 
     ./tradfri_hue_workaround.py -c config.ini -vv -t 1.0
 
