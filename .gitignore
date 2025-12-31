@@ -130,3 +130,6 @@ dmypy.json
 
 # Debug
 debug/
+
+# Config
+config.ini

@@ -1,0 +1,14 @@
+[TradfriHue]
+# Bridge Connection
+bridge_ip = 192.168.1.50
+username = YOUR_HUE_API_KEY_HERE
+
+# Lights to monitor (comma or space separated)
+light_ids = 1, 5, 12
+
+# Settings
+poll_time = 0.5
+brightness_delay = 1.5
+verbose = 2
+max_retries = 10
+retry_delay = 5
