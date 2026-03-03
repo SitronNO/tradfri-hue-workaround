@@ -133,3 +133,4 @@ debug/
 
 # Config
 config.ini
+docker.ini
