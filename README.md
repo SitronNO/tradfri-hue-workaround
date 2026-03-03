@@ -15,30 +15,43 @@ Bridge thinks the brightness has changed, while it has actually not changed.
 ## Docker
 
 If you want to run this project as a Docker container, a `Dockerfile` is provied
-so you are able to build and run the container:
+so you are able to build and run the container.
 
-1. `cp config.ini.example docker.ini`
-2. Edit `docker.ini` to fit your system. You might need to run some commands
-   (below) beforehand to get list of lights and API-KEY.
-3. Build the image:
+### Build
 
-    # Old school:
+To build the image, you should use `buildx` like this:
+
+    docker buildx build -t tradfri-hue-workaround<:tag> .
+
+You can also use the old-school method:
+
     docker build -t tradfri-hue-workaround:<tag> .
 
-    # New method using buildx:
-    docker buildx build -t tradfri-hue-workaround:<tag> .
+### Run
 
-4. Run the container:
+You need to create a valid configuration file. See README.md and/or
+`config.ini.example`. You might need to run some commands (see below) to get
+list of lights and API-KEY.
 
-    # Foreground:
-    docker run --rm --name tradfri-hue-workaround tradfri-hue-workaround:<tag>
+Then run the following command to start the container:
 
-    # Background:
-    docker run --rm --name tradfri-hue-workaround tradfri-hue-workaround:<tag> -d
+    docker run --volume <path_to_configfile>:/code/config.ini --rm --name tradfri-hue-workaround tradfri-hue-workaround<:tag>
+
+If you want to run the container in the background, add `--detach` to the
+command.
+
+In the example below, the a filename of `docker.ini` was chosen for the
+configfile, and using a tag of `0.2`. The container will also run in the
+background:
+
+    docker run --detach --volume $PWD/docker.ini:/code/config.ini --rm --name tradfri-hue-workaround tradfri-hue-workaround:0.2
+
+To view the logs from the container:
+
     docker logs -f tradfri-hue-workaround
 
 
-## Requirements
+## Run as a python3 script
 You'll need a PC or server where the script can run in the background. 
 
 It's recommended to use a Python3 virtual environment to install the required
